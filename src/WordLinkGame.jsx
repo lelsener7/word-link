@@ -2,14 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 
 // ---- Helpers ----
 const onlyLetters = (s) => (s || "").replace(/[^a-z]/gi, "");
+const sanitizePuzzle = (arr) =>
+  (arr || []).map((w) => onlyLetters(String(w)).toLowerCase()).filter(Boolean);
+
 // Default puzzle
 const defaultPuzzle = () => ["coffee", "table", "tennis", "racket"];
 
 export default function WordLinkGame() {
-  // Builder
-  const [builderOpen, setBuilderOpen] = useState(false);
-  const [builderText, setBuilderText] = useState(defaultPuzzle().join("\n"));
-
   // Game state
   const [words, setWords] = useState(defaultPuzzle());
   const [revealedUpTo, setRevealedUpTo] = useState(0); // index of last revealed word
@@ -35,6 +34,18 @@ export default function WordLinkGame() {
     return Math.min(1 + Math.floor(g / 2), words[i].length);
   };
 
+  // Keep attempts/sticky shape in sync if the puzzle changes
+  useEffect(() => {
+    setAttempts((prev) => {
+      if (prev.length === words.length) return prev;
+      return Array(words.length).fill(0);
+    });
+    setSticky({});
+    setTyped("");
+    setRevealedUpTo(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [words.length]);
+
   // Reset typed & prep sticky array when we move to a new active word
   useEffect(() => {
     setTyped("");
@@ -46,6 +57,17 @@ export default function WordLinkGame() {
     const el = rowRefs.current[nextIndex];
     if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
   }, [nextIndex]);
+
+  // Optional backend hook: allow runtime puzzle replacement
+  useEffect(() => {
+    window.setWordLinkPuzzle = (arr) => {
+      const clean = sanitizePuzzle(arr);
+      if (clean.length > 1) setWords(clean);
+    };
+    return () => {
+      delete window.setWordLinkPuzzle;
+    };
+  }, []);
 
   // Remaining non-sticky positions for the active row
   const remainingSlots = (() => {
@@ -196,7 +218,7 @@ export default function WordLinkGame() {
             <div>
               <h1 className="text-2xl font-semibold tracking-tight">Word Link</h1>
               <p className="text-slate-500 text-xs sm:text-sm">
-                Each word links to the next. After every two wrong guesses, an extra letter appears.
+                Each word links to the next: bus -> stop -> sign. After every two wrong guesses, an extra letter appears.
                 Letters in the right spot stay.
               </p>
             </div>
@@ -204,12 +226,6 @@ export default function WordLinkGame() {
               <span className="px-2 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs sm:text-sm">
                 Total guesses: <span className="font-semibold">{totalGuesses}</span>
               </span>
-              <button
-                onClick={() => setBuilderOpen(!builderOpen)}
-                className="px-3 py-2 rounded-xl border border-slate-300 text-sm hover:bg-slate-50"
-              >
-                {builderOpen ? "Close Builder" : "Open Builder"}
-              </button>
               <button
                 onClick={() => {
                   setRevealedUpTo(0);
@@ -224,48 +240,6 @@ export default function WordLinkGame() {
               </button>
             </div>
           </header>
-
-          {/* Builder */}
-          {builderOpen && (
-            <section className="mt-3 grid gap-3 border border-slate-200 rounded-xl p-3 sm:p-4 bg-slate-50">
-              <h2 className="text-lg font-medium">Puzzle Builder</h2>
-              <p className="text-sm text-slate-600">
-                Enter each word on a new line (letters only). The first word will be shown in full.
-              </p>
-              <textarea
-                value={builderText}
-                onChange={(e) => setBuilderText(e.target.value)}
-                rows={5}
-                className="w-full rounded-xl border border-slate-300 p-3 focus:outline-none focus:ring-2 focus:ring-slate-400 font-mono text-sm"
-                placeholder={"e.g.\ncoffee\ntable\ntennis\nracket"}
-              />
-              <div className="flex items-center justify-between">
-                <button
-                  onClick={() => {
-                    const newWords = builderText
-                      .split("\n")
-                      .map((w) => onlyLetters(w).toLowerCase())
-                      .filter(Boolean);
-                    if (newWords.length > 1) {
-                      setWords(newWords);
-                      setRevealedUpTo(0);
-                      setAttempts(Array(newWords.length).fill(0));
-                      setSticky({});
-                      setTyped("");
-                      setFeedback("");
-                    } else {
-                      setFeedback("Please enter at least 2 words.");
-                      setTimeout(() => setFeedback(""), 1200);
-                    }
-                  }}
-                  className="px-4 py-2 rounded-xl bg-slate-900 text-white text-sm hover:bg-slate-800"
-                >
-                  Load Puzzle
-                </button>
-                <span className="text-xs text-slate-500">Words: {words.length}</span>
-              </div>
-            </section>
-          )}
 
           {/* Game list */}
           <section className="mt-3">
