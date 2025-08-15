@@ -79,6 +79,7 @@ export default function WordLinkGame() {
         tIdx++;
       }
       setSticky((s) => ({ ...s, [nextIndex]: prevStick }));
+      setTyped(""); // clear all non-sticky letters after a wrong guess
       setFeedback("Not quite — try again.");
       setTimeout(() => setFeedback(""), 900);
     }
@@ -133,7 +134,8 @@ export default function WordLinkGame() {
           const base = "w-10 h-12 mr-2 grid place-items-center rounded-lg border text-lg font-mono";
           let cls = "border-slate-300 bg-white text-slate-900";
           if (c.state === "prefix") cls = "border-emerald-300 bg-emerald-50 text-emerald-800";
-          if (c.state === "sticky") cls = "border-blue-300 bg-blue-50 text-blue-800";
+          // if (c.state === "sticky") cls = "border-blue-300 bg-blue-50 text-blue-800";
+          if (c.state === "sticky") cls = "border-emerald-300 bg-emerald-50 text-emerald-800";
           if (c.state === "solved") cls = "border-emerald-300 bg-emerald-50 text-emerald-800";
           if (c.state === "masked") cls = "border-slate-300 bg-white text-slate-400";
           return (
