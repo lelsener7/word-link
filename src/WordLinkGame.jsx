@@ -131,7 +131,8 @@ export default function WordLinkGame() {
       <div className="flex select-none" onClick={() => isActive && inputRef.current?.focus()}>
         {chars.map((c, idx) => {
           const isCursor = isActive && c.state === "empty" && chars.findIndex(x => x.state === "empty") === idx;
-          const base = "w-10 h-12 mr-2 grid place-items-center rounded-lg border text-lg font-mono";
+          // const base = "w-10 h-12 mr-2 grid place-items-center rounded-lg border text-lg font-mono";
+          const base = "w-8 h-10 mr-1 grid place-items-center rounded-md border text-base font-mono sm:w-10 sm:h-12 sm:mr-2 sm:text-lg";
           let cls = "border-slate-300 bg-white text-slate-900";
           if (c.state === "prefix") cls = "border-emerald-300 bg-emerald-50 text-emerald-800";
           // if (c.state === "sticky") cls = "border-blue-300 bg-blue-50 text-blue-800";
@@ -151,8 +152,8 @@ export default function WordLinkGame() {
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-6">
       <div className="w-full max-w-2xl">
-        <div className="bg-white/90 backdrop-blur rounded-2xl shadow-xl p-6 border border-slate-200">
-          <header className="flex items-start justify-between gap-3">
+        <div className="bg-white/90 backdrop-blur rounded-2xl shadow-xl p-4 sm:p-6 border border-slate-200 max-h-[90vh] sm:max-h-none overflow-auto">
+          <header className="flex items-start justify-between gap-2 flex-wrap">
             <div>
               <h1 className="text-2xl font-semibold tracking-tight">Word Link by Boarlettie</h1>
               <p className="text-slate-500 text-sm">
@@ -160,6 +161,10 @@ export default function WordLinkGame() {
                 After every two wrong guesses, one more letter is revealed.<br />
                 Incorrect guesses with a correct letter placement are revealed.
               </p>
+{/*               <p className="text-slate-500 text-xs sm:text-sm">
+              Each word links to the next. After every two wrong guesses, an extra letter appears. Letters in the right spot stay.
+              <span className="hidden sm:inline"> Example: <span className="italic">coffee → table → tennis → racket</span>.</span>
+              </p> */}
             </div>
             <button
               onClick={() => setBuilderOpen(!builderOpen)}
@@ -219,6 +224,10 @@ export default function WordLinkGame() {
                           ref={inputRef}
                           type="text"
                           inputMode="latin"
+                          enterKeyHint="go"
+                          autoCapitalize="none"
+                          autoCorrect="off"
+                          spellCheck={false}
                           autoFocus
                           value={typed}
                           onChange={(e) => setTyped(onlyLetters(e.target.value).toLowerCase().slice(0, remainingSlots))}
