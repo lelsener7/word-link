@@ -6,7 +6,8 @@ const sanitizePuzzle = (arr) =>
   (arr || []).map((w) => onlyLetters(String(w)).toLowerCase()).filter(Boolean);
 
 // Default puzzle
-const defaultPuzzle = () => ["coffee", "table", "tennis", "racket"];
+// const defaultPuzzle = () => ["coffee", "table", "tennis", "racket"];
+const defaultPuzzle = () => ["credit", "card", "game", "plan"];
 
 export default function WordLinkGame() {
   // Game state
