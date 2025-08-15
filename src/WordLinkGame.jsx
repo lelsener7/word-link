@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 
 const onlyLetters = (s) => (s || "").replace(/[^a-z]/gi, "");
-const defaultPuzzle = () => ["house", "call", "center", "cut", "over"];
+// const defaultPuzzle = () => ["house", "call", "center", "cut", "over"];
+const defaultPuzzle = () => ["coffee", "table", "tennis", "racket"];
 
 export default function WordLinkGame() {
   const [builderOpen, setBuilderOpen] = useState(false);
