@@ -154,7 +154,7 @@ export default function WordLinkGame() {
         <div className="bg-white/90 backdrop-blur rounded-2xl shadow-xl p-6 border border-slate-200">
           <header className="flex items-start justify-between gap-3">
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight">Word Link</h1>
+              <h1 className="text-2xl font-semibold tracking-tight">Word Link by Boarlettie</h1>
               <p className="text-slate-500 text-sm">
                 Each word links to the next — e.g., <span className="italic">school → bus → stop → sign</span>.<br />
                 After every two wrong guesses, one more letter is revealed.<br />
