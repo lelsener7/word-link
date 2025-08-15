@@ -216,7 +216,7 @@ export default function WordLinkGame() {
           {/* Header */}
           <header className="flex items-start justify-between gap-2 flex-wrap">
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight">Word Link</h1>
+              <h1 className="text-2xl font-semibold tracking-tight">Word Link by King P</h1>
               <p className="text-slate-500 text-xs sm:text-sm">
                 Each word links to the next: bus -> stop -> sign. After every two wrong guesses, an extra letter appears.
                 Letters in the right spot stay.
